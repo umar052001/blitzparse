@@ -1,3 +1,4 @@
+use pyo3::prelude::*;
 pub mod errors;
 pub mod parsers;
 
@@ -16,6 +17,24 @@ pub fn extract_text(path: &str) -> Result<String, BlitzParseError> {
         "txt" => parsers::txt::parse_txt(path),
         _ => Err(BlitzParseError::UnsupportedFileType(extension.to_string())),
     }
+}
+
+// This `#[pyfunction]` attribute exposes our Rust function to Python.
+// We also handle the error conversion here, turning a Rust `Result` into a Python exception.
+#[pyfunction]
+fn extract_text_py(path: &str) -> PyResult<String> {
+    match extract_text(path) {
+        Ok(text) => Ok(text),
+        Err(e) => Err(pyo3::exceptions::PyValueError::new_err(e.to_string())),
+    }
+}
+
+// This `#[pymodule]` block creates the Python module.
+// Python will be able to `import blitzparse` because of this.
+#[pymodule]
+fn blitz_parse(m: &Bound<'_, PyModule>) -> PyResult<()> {
+    m.add_function(wrap_pyfunction!(extract_text_py, m)?)?;
+    Ok(())
 }
 
 #[cfg(test)]
