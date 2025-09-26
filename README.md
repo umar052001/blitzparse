@@ -24,6 +24,9 @@ The primary goal of BlitzParse is to be exceptionally fast. In benchmark tests a
   * **Production Ready:** Thoroughly tested with both unit and integration tests, and validated with a CI pipeline.
 
 ## Installation
+With blitz_parse now published on [PyPI](https://pypi.org/project/blitz-parse/), installation is as simple as:
+
+`pip install blitz-parse`
 
 BlitzParse is built as a native Python module using `maturin`.
 
