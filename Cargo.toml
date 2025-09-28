@@ -15,6 +15,9 @@ rayon = "1.8"          # Parallel processing for large documents
 memmap2 = "0.9"        # Memory-mapped file I/O for large files
 zip="0.6"
 quick-xml = "0.36.1"   
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+unicode-segmentation = "1.11.0"
 
 [dev-dependencies]
 tempfile = "3.10.1"
