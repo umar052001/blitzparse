@@ -25,6 +25,16 @@ pub fn chunk_text(text: &str, strategy: &ChunkingStrategy) -> Vec<String> {
 }
 
 fn recursive_character_split(text: &str, chunk_size: usize, overlap: usize) -> Vec<String> {
+    if chunk_size == 0 {
+        return Vec::new();
+    }
+
+    let step = if overlap >= chunk_size {
+        1
+    } else {
+        chunk_size - overlap
+    };
+
     let mut chunks = Vec::new();
     let graphemes: Vec<&str> = text.graphemes(true).collect();
     if graphemes.len() <= chunk_size {
@@ -40,7 +50,7 @@ fn recursive_character_split(text: &str, chunk_size: usize, overlap: usize) -> V
         if end == graphemes.len() {
             break;
         }
-        start += chunk_size - overlap;
+        start += step;
     }
     chunks
 }
@@ -58,5 +68,13 @@ mod tests {
         assert_eq!(chunks[0], "This is a sentence. ");
         assert_eq!(chunks[1], "nce. This is another");
         assert_eq!(chunks[2], "other sentence.");
+    }
+
+    #[test]
+    fn test_recursive_split_with_large_overlap() {
+        let text = "abcdef";
+        let chunks = recursive_character_split(text, 3, 5);
+
+        assert_eq!(chunks, vec!["abc", "bcd", "cde", "def"]);
     }
 }
